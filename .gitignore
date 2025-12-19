@@ -1,0 +1,47 @@
+# Binaries
+clipbot
+clipbot.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Config with secrets
+config.yaml
+*.env
+
+# YouTube OAuth (절대 커밋하면 안됨!)
+youtube_credentials.json
+youtube_token.json
+*_credentials.json
+*_token.json
+
+# Directories
+input/
+output/
+temp/
+archive/
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go
+vendor/
+go.sum
+
+# Logs
+*.log
+logs/
+
+# Test
+coverage.out
+*.test
+

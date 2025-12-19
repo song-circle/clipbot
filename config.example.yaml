@@ -1,0 +1,197 @@
+# ClipBot 설정 파일
+# 이 파일을 config.yaml로 복사하여 사용하세요
+
+app:
+  name: "ClipBot"
+  log_level: "info"  # debug, info, warn, error
+  debug: false
+
+# 영상 편집 설정
+video:
+  ffmpeg_path: ""  # 비워두면 시스템 PATH에서 찾음
+  default_width: 1080
+  default_height: 1920  # 9:16 세로 영상
+  default_fps: 30
+  max_duration: 60  # 초 (쇼츠/릴스 최대 길이)
+  output_format: "mp4"
+  quality: "high"  # low, medium, high, ultra
+
+  effects:
+    auto_crop: true           # 자동 세로 크롭
+    face_tracking: false      # 얼굴 추적 크롭 (추가 설정 필요)
+    zoom_effect: false        # 줌 효과
+    transition_type: "fade"   # fade, slide, zoom
+    speed_multiplier: 1.0     # 배속 (1.0 = 원본 속도)
+
+  subtitle:
+    enabled: true
+    language: "ko"            # ko, en, ja, zh 등
+    style: "modern"           # modern, classic, minimal, neon
+    font_size: 48
+    font_color: "#FFFFFF"
+    bg_color: "#00000080"     # 반투명 검정
+    position: "bottom"        # top, center, bottom
+    word_by_word: true        # 단어별 하이라이트 (틱톡 스타일)
+
+# AI 설정
+ai:
+  provider: "openai"
+  openai_key: ""              # 환경변수 CLIPBOT_OPENAI_KEY로도 설정 가능
+  model: "gpt-4"              # gpt-4, gpt-3.5-turbo
+  whisper_model: "base"       # tiny, base, small, medium, large (자막 생성용)
+  auto_caption: true          # 자동 자막 생성
+  auto_hashtags: true         # 자동 해시태그 생성
+  content_ideas: true         # 콘텐츠 아이디어 제안
+
+# 플랫폼 설정
+platforms:
+  # TikTok 설정
+  tiktok:
+    enabled: true
+    session_id: ""            # 브라우저 쿠키에서 sessionid 값
+    username: ""              # 틱톡 사용자명
+    default_tags:
+      - "#fyp"
+      - "#viral"
+      - "#틱톡"
+    auto_post: true
+
+  # YouTube Shorts 설정
+  youtube:
+    enabled: true
+    client_id: ""             # Google Cloud Console에서 발급
+    client_secret: ""         # 환경변수 CLIPBOT_YOUTUBE_CLIENT_SECRET
+    refresh_token: ""         # 첫 인증 후 저장됨
+    channel_id: ""
+    default_tags:
+      - "Shorts"
+      - "쇼츠"
+    category_id: "24"         # Entertainment
+    privacy_status: "public"  # public, private, unlisted
+    shorts_hashtag: true      # #Shorts 자동 추가
+
+  # Instagram Reels 설정
+  instagram:
+    enabled: false            # 보안상 기본 비활성화
+    username: ""
+    password: ""              # ⚠️ 2FA 비활성화 필요
+    session_data: ""          # 세션 쿠키
+    default_tags:
+      - "#reels"
+      - "#릴스"
+      - "#인스타그램"
+
+  # Facebook Reels 설정
+  facebook:
+    enabled: false
+    access_token: ""          # Facebook Developer에서 발급
+    page_id: ""               # 페이지 ID
+    default_tags:
+      - "#reels"
+      - "#페이스북"
+
+  # Twitter/X 설정
+  twitter:
+    enabled: false
+    api_key: ""               # Twitter Developer Portal에서 발급
+    api_secret: ""
+    access_token: ""
+    access_secret: ""
+    default_tags:
+      - "#viral"
+
+# 스케줄 설정
+schedule:
+  enabled: true
+  timezone: "Asia/Seoul"
+  post_times:                 # 업로드 시간 (24시간 형식)
+    - "09:00"
+    - "15:00"
+    - "21:00"
+  posts_per_day: 3
+  random_delay: 30            # 분 단위 랜덤 딜레이 (봇 감지 방지)
+  weekend_pause: false        # 주말 업로드 일시정지
+  optimal_timing: true        # AI 기반 최적 시간 분석
+
+# 저장소 설정
+storage:
+  input_dir: "./input"        # 원본 영상 폴더
+  output_dir: "./output"      # 편집된 영상 폴더
+  temp_dir: "./temp"          # 임시 파일 폴더
+  archive_dir: "./archive"    # 업로드 완료된 영상 아카이브
+  database_path: "./data/clipbot.db"  # 업로드 기록 DB
+
+# 영상 자동 수집 설정
+collector:
+  enabled: true
+  output_dir: "./input"       # 수집된 영상 저장 위치
+  max_duration: 60            # 최대 영상 길이 (초) - 쇼츠/릴스 형식
+  min_duration: 5             # 최소 영상 길이 (초)
+  max_file_size: 100          # 최대 파일 크기 (MB)
+  check_interval: 60          # 자동 수집 간격 (분)
+  ytdlp_path: ""              # yt-dlp 경로 (비워두면 시스템 PATH에서 찾음)
+
+  # 🎬 저작권 프리 스톡 영상 API (무료)
+  stock_video:
+    pexels_api_key: ""        # https://www.pexels.com/api/ 에서 무료 발급
+    pixabay_api_key: ""       # https://pixabay.com/api/docs/ 에서 무료 발급
+
+  # 수집 소스 설정
+  sources:
+    # YouTube 수집
+    - type: "youtube"
+      enabled: true
+      urls:                   # 특정 채널 URL
+        - "https://www.youtube.com/@MrBeast/shorts"
+        - "https://www.youtube.com/@pewdiepie/shorts"
+      keywords:               # 검색 키워드
+        - "viral shorts"
+        - "funny moments"
+        - "satisfying"
+      max_items: 10           # 각 소스당 최대 수집 개수
+      sort_by: "hot"          # hot, new, top
+
+    # Reddit 수집
+    - type: "reddit"
+      enabled: true
+      urls:                   # 서브레딧 이름
+        - "videos"
+        - "TikTokCringe"
+        - "Unexpected"
+        - "interestingasfuck"
+        - "oddlysatisfying"
+      max_items: 5
+      sort_by: "hot"          # hot, new, top, rising
+
+    # TikTok 수집
+    - type: "tiktok"
+      enabled: false          # 로그인 필요할 수 있음
+      urls:
+        - "https://www.tiktok.com/@tiktok"
+      hashtags:
+        - "#fyp"
+        - "#viral"
+        - "#funny"
+      max_items: 10
+
+    # Twitter/X 수집
+    - type: "twitter"
+      enabled: false
+      urls:
+        - "https://twitter.com/i/lists/viral-videos"
+      max_items: 5
+
+  # 필터 설정
+  filters:
+    min_views: 10000          # 최소 조회수
+    min_likes: 100            # 최소 좋아요
+    languages:                # 허용 언어 (비워두면 모두 허용)
+      - "ko"
+      - "en"
+    exclude_words:            # 제외할 키워드
+      - "광고"
+      - "sponsored"
+      - "ad"
+    include_words: []         # 반드시 포함해야 할 키워드
+    require_audio: true       # 오디오 필수 여부
+
